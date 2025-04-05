@@ -1,23 +1,30 @@
-<link rel="stylesheet" href="style.css">
-<script src="app.js" defer></script>
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Page Title</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
-</head>
-<body>
-  <!-- Your content goes here -->
-</body>
-</html>
-<!DOCTYPE html>
-<html>
-<head>
   <title>Enter Name</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3C_N_fUg8gxJMERpg0UOjNq8fCcoFKU",
+      authDomain: "h8k-ordering-page.firebaseapp.com",
+      projectId: "h8k-ordering-page",
+      storageBucket: "h8k-ordering-page.appspot.com",
+      messagingSenderId: "234391039023",
+      appId: "1:234391039023:web:374cbea89c5877b30e6ada",
+      measurementId: "G-8JXVNEME10"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window.db = db;
+    window.firestoreFns = { collection, addDoc, getDocs, deleteDoc, doc };
+  </script>
+
   <script src="app.js" defer></script>
 </head>
 <body>

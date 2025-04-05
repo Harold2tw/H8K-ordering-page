@@ -1,98 +1,114 @@
-// LocalStorage Key
-const STORAGE_KEY = 'h8k_orders';
-let currentOrder = JSON.parse(localStorage.getItem('currentOrder')) || {};
+// Get Firebase Firestore via global window from HTML
+const db = window.db;
+const { collection, addDoc, getDocs, deleteDoc, doc } = window.firestoreFns;
 
-// Step 1: Select Item
-function selectItem(itemName) {
-  currentOrder.item = itemName;
-  localStorage.setItem('currentOrder', JSON.stringify(currentOrder));
-  window.location.href = 'amount.html';
+const ORDER_COLLECTION = "orders";
+
+// ----- ORDER FLOW FUNCTIONS -----
+
+function selectItem(item) {
+  localStorage.setItem("selectedItem", item);
+  window.location.href = "amount.html";
 }
 
-// Step 2: Select Amount
-function selectAmount(count, price) {
-  currentOrder.count = count;
-  currentOrder.price = price;
-  localStorage.setItem('currentOrder', JSON.stringify(currentOrder));
-  window.location.href = 'name.html';
+function selectAmount(amount, price) {
+  localStorage.setItem("selectedAmount", amount);
+  localStorage.setItem("selectedPrice", price);
+  window.location.href = "name.html";
 }
 
-// Step 3: Save Name
 function saveName() {
-  const name = document.getElementById('nameInput').value;
-  if (name.trim() === '') return alert("Please enter a name.");
-  currentOrder.name = name;
-  localStorage.setItem('currentOrder', JSON.stringify(currentOrder));
-  window.location.href = 'delivery.html';
+  const name = document.getElementById("nameInput").value;
+  localStorage.setItem("customerName", name);
+  window.location.href = "delivery.html";
 }
 
-// Step 4: Submit Final Order
-function submitOrder() {
-  const delivery = document.getElementById('deliveryInput').value;
-  if (delivery.trim() === '') return alert("Please enter delivery info.");
-  currentOrder.delivery = delivery;
+async function submitOrder() {
+  const item = localStorage.getItem("selectedItem");
+  const amount = localStorage.getItem("selectedAmount");
+  const price = localStorage.getItem("selectedPrice");
+  const name = localStorage.getItem("customerName");
+  const delivery = document.getElementById("deliveryInput").value;
 
-  let orders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  orders.push(currentOrder);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+  const order = {
+    item,
+    amount,
+    price,
+    name,
+    delivery,
+    timestamp: new Date().toISOString()
+  };
 
-  // Clear working order
-  localStorage.removeItem('currentOrder');
-  localStorage.setItem('lastOrder', JSON.stringify(currentOrder));
-
-  window.location.href = 'thanks.html';
+  try {
+    await addDoc(collection(db, ORDER_COLLECTION), order);
+    localStorage.setItem("lastOrder", JSON.stringify(order));
+    window.location.href = "thanks.html";
+  } catch (e) {
+    alert("Failed to submit order: " + e.message);
+  }
 }
 
-// Thank You page renderer
-window.onload = function () {
-  const summaryBox = document.getElementById('summaryBox');
-  if (summaryBox) {
-    const order = JSON.parse(localStorage.getItem('lastOrder'));
-    if (order) {
-      summaryBox.innerText = formatOrder(order);
+// ----- ADMIN FUNCTIONS -----
+
+async function loadOrders() {
+  const container = document.getElementById("ordersContainer");
+  if (!container) return;
+
+  const snapshot = await getDocs(collection(db, ORDER_COLLECTION));
+  container.innerHTML = "";
+
+  snapshot.forEach(docSnap => {
+    const data = docSnap.data();
+    const orderBox = document.createElement("div");
+    orderBox.className = "order-box";
+    orderBox.innerHTML = `
+      <strong>${data.name}</strong><br>
+      Item: ${data.item}<br>
+      Amount: ${data.amount}<br>
+      Price: $${data.price}<br>
+      Delivery: ${data.delivery}<br>
+      <button onclick="deleteOrder('${docSnap.id}')">Completed</button>
+    `;
+    container.appendChild(orderBox);
+  });
+}
+
+async function deleteOrder(id) {
+  try {
+    await deleteDoc(doc(db, ORDER_COLLECTION, id));
+    loadOrders(); // refresh the list
+  } catch (e) {
+    alert("Failed to delete order: " + e.message);
+  }
+}
+
+// ----- THANK YOU PAGE LOAD -----
+
+window.addEventListener("DOMContentLoaded", () => {
+  if (window.location.pathname.includes("thanks.html")) {
+    const box = document.getElementById("summaryBox");
+    const order = JSON.parse(localStorage.getItem("lastOrder"));
+    if (box && order) {
+      box.innerHTML = `
+        <p><strong>${order.name}</strong>, thank you for ordering!</p>
+        <p>Item: ${order.item}</p>
+        <p>Amount: ${order.amount}</p>
+        <p>Total: $${order.price}</p>
+        <p>Delivery: ${order.delivery}</p>
+      `;
     }
   }
 
-  const adminContainer = document.getElementById('ordersContainer');
-  if (adminContainer) {
-    const orders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    orders.forEach((order, index) => {
-      const box = document.createElement('div');
-      box.className = 'orderBox';
-      box.innerText = formatOrder(order);
-      const btn = document.createElement('button');
-      btn.innerText = 'Completed';
-      btn.onclick = () => {
-        removeOrder(index);
-      };
-      box.appendChild(btn);
-      adminContainer.appendChild(box);
-    });
+  if (window.location.pathname.includes("admin.html")) {
+    loadOrders();
   }
-}
+});
 
-// Admin login logic
+// ----- ADMIN LOGIN -----
+
 function checkAdminPassword() {
-  const pass = document.getElementById('adminPass').value;
-  if (pass === "Harold&Kevin") {
-    window.location.href = 'admin.html';
-  } else {
-    alert("Incorrect password.");
+  const input = document.getElementById("adminPass").value;
+  if (input === "Harold&Kevin") {
+    window.location.href = "admin.html";
   }
-}
-
-// Format order nicely
-function formatOrder(order) {
-  return `Name: ${order.name}
-Amount owed: $${order.price}
-Item: ${order.count} ${order.item}s
-When & Where: ${order.delivery}`;
-}
-
-// Remove an order
-function removeOrder(index) {
-  let orders = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  orders.splice(index, 1);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-  window.location.reload();
 }
