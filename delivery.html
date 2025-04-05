@@ -1,38 +1,42 @@
+
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Delivery Info</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  <!-- ✅ Firebase SDKs via CDN -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js"></script>
+
+  <!-- ✅ Firebase Config -->
+  <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyB3C_N_fUg8gxJMERpg0UOjNq8fCcoFKU",
+      apiKey: "AIzaSyB3C-N_fUg8gxJMERpg0UOjNq8fCcoFKU",
       authDomain: "h8k-ordering-page.firebaseapp.com",
       projectId: "h8k-ordering-page",
       storageBucket: "h8k-ordering-page.appspot.com",
       messagingSenderId: "234391039023",
-      appId: "1:234391039023:web:374cbea89c5877b30e6ada",
-      measurementId: "G-8JXVNEME10"
+      appId: "1:234391039023:web:374cbea89c5877b30e6ada"
     };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
     window.db = db;
-    window.firestoreFns = { collection, addDoc, getDocs, deleteDoc, doc };
   </script>
 
+  <!-- ✅ Your logic -->
   <script src="app.js" defer></script>
 </head>
 <body>
   <h2>When + Where should your order be delivered?</h2>
-  <textarea id="deliveryInput" placeholder="e.g. Monday, April 7th at lunch..."></textarea>
-  <br>
+  <textarea id="deliveryInput" placeholder="e.g. Friday, May 12 at Trader Joe's parking lot."></textarea>
   <button onclick="submitOrder()">Submit</button>
   <button onclick="window.location.href='name.html'">Back</button>
 </body>
 </html>
+
 
