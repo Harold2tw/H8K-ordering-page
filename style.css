@@ -1,0 +1,43 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background: #fdfdfd;
+  }
+  
+  h1, h2 {
+    margin-bottom: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin: 10px;
+    cursor: pointer;
+    border: 2px solid #333;
+    background: white;
+    font-size: 16px;
+  }
+  
+  input, textarea {
+    padding: 10px;
+    margin: 10px;
+    width: 60%;
+    font-size: 16px;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    justify-items: center;
+    margin-top: 20px;
+  }
+  
+  #summaryBox {
+    border: 2px solid #333;
+    padding: 20px;
+    display: inline-block;
+    text-align: left;
+    white-space: pre-wrap;
+  }
+  
