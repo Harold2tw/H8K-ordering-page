@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3C_N_fUg8gxJMERpg0UOjNq8fCcoFKU",
+      authDomain: "h8k-ordering-page.firebaseapp.com",
+      projectId: "h8k-ordering-page",
+      storageBucket: "h8k-ordering-page.appspot.com",
+      messagingSenderId: "234391039023",
+      appId: "1:234391039023:web:374cbea89c5877b30e6ada",
+      measurementId: "G-8JXVNEME10"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window.db = db;
+    window.firestoreFns = { collection, addDoc, getDocs, deleteDoc, doc };
+  </script>
+
+  <script src="app.js" defer></script>
+
+  <style>
+    .bottom-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      font-size: 16px;
+      border: 2px solid #333;
+      background: white;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Thank you for your purchase</h2>
+  <div id="summaryBox"></div>
+  <button class="bottom-button" onclick="window.location.href='index.html'">Return</button>
+</body>
+</html>
+
+
+  

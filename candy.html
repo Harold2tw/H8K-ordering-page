@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Candy</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase SDK + Firestore Initialization -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3C_N_fUg8gxJMERpg0UOjNq8fCcoFKU",
+      authDomain: "h8k-ordering-page.firebaseapp.com",
+      projectId: "h8k-ordering-page",
+      storageBucket: "h8k-ordering-page.appspot.com",
+      messagingSenderId: "234391039023",
+      appId: "1:234391039023:web:374cbea89c5877b30e6ada",
+      measurementId: "G-8JXVNEME10"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    window.db = db;
+    window.firestoreFns = { collection, addDoc, getDocs, deleteDoc, doc };
+  </script>
+
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <h2>Select your item</h2>
+  <div class="grid">
+    <button onclick="selectItem('Guava Candy')">Guava Candy</button>
+    <div>More coming soon</div>
+    <div>More coming soon</div>
+    <div>More coming soon</div>
+  </div>
+</body>
+</html>
