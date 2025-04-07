@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Thanks for Your Order!</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <img src="logo.png" alt="Guava Co. Logo" class="logo">
+  <h1>Thanks!</h1>
+  <pre id="summaryText">Loading order summary...</pre>
+  <button onclick="goHome()" class="btn">Return to Main</button>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem('orderSummary'));
+    document.getElementById('summaryText').textContent = `
+Customer Name: ${data.name}
+Phone #: ${data.phone || 'None'}
+Order Item: ${data.item}
+Quantity: ${data.quantity}
+Price: $${data.price}
+When+Where: ${data.location}
+Special Inst.: ${data.instructions}
+`.trim();
+
+    function goHome() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

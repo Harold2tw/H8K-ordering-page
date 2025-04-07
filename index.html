@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to H8K inc</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <img src="logo.png" alt="Guava Co. Logo" class="logo">
+  <h1>Welcome to H8K inc</h1>
+  <button onclick="showForm()" class="btn">Place an Order</button>
+
+  <form id="orderForm" class="hidden" onsubmit="submitOrder(event)">
+    <h2>Order Form</h2>
+    <input type="text" id="name" placeholder="Customer Name" required><br>
+    <input type="text" id="phone" placeholder="Phone Number (optional)"><br>
+    <select id="item">
+      <option value="Guava">Guava</option>
+    </select><br>
+    <input type="number" id="quantity" placeholder="Quantity" min="1" required oninput="updatePrice()"><br>
+    <input type="text" id="location" placeholder="When + Where" required><br>
+    <textarea id="instructions" placeholder="Special Instructions" rows="3"></textarea><br>
+    <p id="priceDisplay">Price: $0.00</p>
+    <button type="submit" class="btn">Submit</button>
+  </form>
+
+  <script>
+    let price = 0;
+
+    function showForm() {
+      document.getElementById('orderForm').classList.remove('hidden');
+    }
+
+    function updatePrice() {
+      const quantity = document.getElementById('quantity').value || 0;
+      price = (quantity * 0.10).toFixed(2);
+      document.getElementById('priceDisplay').textContent = `Price: $${price}`;
+    }
+
+    function submitOrder(event) {
+      event.preventDefault();
+
+      const data = {
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        item: document.getElementById('item').value,
+        quantity: document.getElementById('quantity').value,
+        price: price,
+        location: document.getElementById('location').value,
+        instructions: document.getElementById('instructions').value,
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbzbZeyjxZktUIt4iaa-NJalrSPy9hecAo0Jyk_5tYphBvxrFbsyPRI_0XeQeM4zrFF_/exec", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(() => {
+        localStorage.setItem('orderSummary', JSON.stringify(data));
+        window.location.href = "thankyou.html";
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        alert("Could not connect to the server. Please open this file directly in your browser.");
+      });
+    }
+  </script>
+</body>
+</html>
